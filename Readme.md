@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Нана Кочерженко](https://up.htmlacademy.ru/ecmascript/12/user/977795).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Пасунько](https://htmlacademy.ru/profile/id702351).
 
 ---
 
