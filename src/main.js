@@ -10,7 +10,7 @@ const createHeaderTemplate = () => {
        <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
      </section>`
   );
-}
+};
 
 const createNavigationTemplate = () => {
   return (
@@ -24,7 +24,7 @@ const createNavigationTemplate = () => {
        <a href="#stats" class="main-navigation__additional">Stats</a>
      </nav>`
   );
-}
+};
 
 const createSortTemplate = () => {
   return (
@@ -34,7 +34,7 @@ const createSortTemplate = () => {
        <li><a href="#" class="sort__button">Sort by rating</a></li>
      </ul>`
   );
-}
+};
 
 const createFilmsListTemplate = () => {
   return (
@@ -46,7 +46,7 @@ const createFilmsListTemplate = () => {
         <button class="films-list__show-more">Show more</button>
      </section>`
   );
-}
+};
 
 const createFilmCardTemplate = () => {
   return (
@@ -67,7 +67,7 @@ const createFilmCardTemplate = () => {
         </form>
       </article>`
   );
-}
+};
 
 const createFilmsExtraTemplate = () => {
   return (
@@ -78,7 +78,7 @@ const createFilmsExtraTemplate = () => {
        </div>
      </section>`
   );
-}
+};
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
