@@ -9,7 +9,7 @@ const createHeaderTemplate = () => {
        <p class="profile__rating">Movie Buff</p>
        <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
      </section>`
-  )
+  );
 }
 
 const createNavigationTemplate = () => {
@@ -23,7 +23,7 @@ const createNavigationTemplate = () => {
        </div>
        <a href="#stats" class="main-navigation__additional">Stats</a>
      </nav>`
-  )
+  );
 }
 
 const createSortTemplate = () => {
@@ -33,7 +33,7 @@ const createSortTemplate = () => {
        <li><a href="#" class="sort__button">Sort by date</a></li>
        <li><a href="#" class="sort__button">Sort by rating</a></li>
      </ul>`
-  )
+  );
 }
 
 const createFilmsListTemplate = () => {
@@ -45,7 +45,7 @@ const createFilmsListTemplate = () => {
         </div>
         <button class="films-list__show-more">Show more</button>
      </section>`
-  )
+  );
 }
 
 const createFilmCardTemplate = () => {
@@ -66,7 +66,7 @@ const createFilmCardTemplate = () => {
           <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
         </form>
       </article>`
-  )
+  );
 }
 
 const createFilmsExtraTemplate = () => {
@@ -77,7 +77,7 @@ const createFilmsExtraTemplate = () => {
        <div class="films-list__container">
        </div>
      </section>`
-  )
+  );
 }
 
 const render = (container, template, place) => {
@@ -110,4 +110,4 @@ siteFilmsExtraListElements.forEach((element) => {
   for (let i = 0; i < COUNT_TOP_FILMS; i++) {
     render(element, createFilmCardTemplate(), `beforeend`);
   }
-})
+});
