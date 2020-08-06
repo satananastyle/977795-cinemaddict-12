@@ -1,9 +1,10 @@
-import {createHeaderTemplate} from "./view/header-template.js";
-import {createNavigationTemplate} from "./view/navigation-template.js";
-import {createSortTemplate} from "./view/sort-temlpate.js";
-import {createFilmsListTemplate} from "./view/films-list-template.js";
-import {createFilmCardTemplate} from "./view/film-card-template.js";
-import {createFilmsExtraTemplate} from "./view/films-extra-template.js";
+import {createHeaderTemplate} from "./view/header.js";
+import {createNavigationTemplate} from "./view/navigation.js";
+import {createSortTemplate} from "./view/sort.js";
+import {createFilmsListTemplate} from "./view/films-list.js";
+import {createFilmCardTemplate} from "./view/film-card.js";
+import {createFilmsExtraTemplate} from "./view/films-extra.js";
+import {createFilmDetailsTemplate} from "./view/film-details.js";
 
 const COUNT_ALL_FILMS = 5;
 const COUNT_TOP_FILMS = 2;
@@ -39,3 +40,5 @@ siteFilmsExtraListElements.forEach((element) => {
     render(element, createFilmCardTemplate(), `beforeend`);
   }
 });
+
+render(siteMainElement, createFilmDetailsTemplate(), `beforeend`);
