@@ -5,9 +5,12 @@ import {createFilmsListTemplate} from "./view/films-list.js";
 import {createFilmCardTemplate} from "./view/film-card.js";
 import {createFilmsExtraTemplate} from "./view/films-extra.js";
 import {createFilmDetailsTemplate} from "./view/film-details.js";
+import {generateFilmCard} from "./mock/film-card.js";
 
 const COUNT_ALL_FILMS = 5;
 const COUNT_TOP_FILMS = 2;
+
+const filmCards = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -26,7 +29,7 @@ const siteContentElement = document.querySelector(`.films`);
 const siteFilmsListElement = document.querySelector(`.films-list .films-list__container`);
 
 for (let i = 0; i < COUNT_ALL_FILMS; i++) {
-  render(siteFilmsListElement, createFilmCardTemplate(), `beforeend`);
+  render(siteFilmsListElement, createFilmCardTemplate(filmCards[i]), `beforeend`);
 }
 
 for (let i = 0; i < COUNT_TOP_FILMS; i++) {
@@ -37,8 +40,8 @@ const siteFilmsExtraListElements = document.querySelectorAll(`.films-list--extra
 
 siteFilmsExtraListElements.forEach((element) => {
   for (let i = 0; i < COUNT_TOP_FILMS; i++) {
-    render(element, createFilmCardTemplate(), `beforeend`);
+    render(element, createFilmCardTemplate(filmCards[i]), `beforeend`);
   }
 });
 
-render(siteMainElement, createFilmDetailsTemplate(), `beforeend`);
+render(siteMainElement, createFilmDetailsTemplate(filmCards[0]), `beforeend`);
