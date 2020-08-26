@@ -5,10 +5,8 @@ import {createFilmsListTemplate} from "./view/films-list.js";
 import {createFilmCardTemplate} from "./view/film-card.js";
 import {createBtnShowMore} from "./view/show-more.js";
 import {createFilmsExtraTemplate} from "./view/films-extra.js";
-
 import {createFilmDetailsTemplate} from "./view/film-details.js";
 import {generateFilmCard} from "./mock/film-card.js";
-import {generateComment} from "./mock/comments.js";
 import {generateFilter} from "./mock/filters.js";
 
 const COUNT_ALL_FILMS = 22;
@@ -16,7 +14,6 @@ const COUNT_TOP_FILMS = 2;
 const COUNT_PER_STEP = 5;
 
 const filmCards = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
-const reactions = new Array(COUNT_ALL_FILMS).fill().map(generateComment);
 const filters = generateFilter(filmCards);
 
 const siteHeaderElement = document.querySelector(`.header`);
@@ -71,4 +68,4 @@ siteFilmsExtraListElements.forEach((element) => {
   }
 });
 
-render(siteMainElement, createFilmDetailsTemplate(filmCards[0], reactions), `beforeend`);
+render(siteMainElement, createFilmDetailsTemplate(filmCards[0]), `beforeend`);

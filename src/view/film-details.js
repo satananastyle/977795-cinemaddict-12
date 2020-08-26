@@ -55,8 +55,8 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
   );
 };
 
-export const createFilmDetailsTemplate = (filmCard, reactions) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite} = filmCard;
+export const createFilmDetailsTemplate = (filmCard) => {
+  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
 
   return (
     `<section class="film-details">

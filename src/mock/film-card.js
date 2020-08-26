@@ -1,4 +1,5 @@
 import {getRandom, getRandomInteger, generateRandomInfo, generateRandomList, generateDate} from "../utils.js";
+import {generateComment} from "./comments.js";
 
 const FIRST_FILM = 1895;
 const TASK_COUNT = 5;
@@ -103,12 +104,16 @@ const generateDescription = () => {
   return description.join(`. `);
 };
 
+
 export const generateFilmCard = () => {
   return {
     title: generateRandomInfo(titles),
     poster: generateRandomInfo(posters),
     description: generateDescription(),
     comments: getRandomInteger(0, TASK_COUNT),
+    get reactions() {
+      return (new Array(this.comments).fill().map(generateComment));
+    },
     rating: getRandom(0, 10),
     release: generateDate(new Date(FIRST_FILM, 0, 1), new Date()),
     genres: generateRandomList(genres),
