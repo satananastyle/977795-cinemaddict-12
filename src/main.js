@@ -7,12 +7,14 @@ import {createFilmsExtraTemplate} from "./view/films-extra.js";
 import {createFilmDetailsTemplate} from "./view/film-details.js";
 import {generateFilmCard} from "./mock/film-card.js";
 import {generateComment} from "./mock/comments.js";
+import {generateFilter} from "./mock/filters.js";
 
-const COUNT_ALL_FILMS = 5;
+const COUNT_ALL_FILMS = 20;
 const COUNT_TOP_FILMS = 2;
 
 const filmCards = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
 const reactions = new Array(COUNT_ALL_FILMS).fill().map(generateComment);
+const filters = generateFilter(filmCards);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -22,7 +24,7 @@ const render = (container, template, place) => {
 };
 
 render(siteHeaderElement, createHeaderTemplate(), `beforeend`);
-render(siteMainElement, createNavigationTemplate(), `beforeend`);
+render(siteMainElement, createNavigationTemplate(filters), `beforeend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
 render(siteMainElement, createFilmsListTemplate(), `beforeend`);
 

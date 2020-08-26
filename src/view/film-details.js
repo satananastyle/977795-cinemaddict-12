@@ -32,8 +32,31 @@ const renderComments = (comments, reactions) => {
   return listReactions;
 };
 
+const getControlsItemClass = (isActive) => {
+  const classActiveButton = isActive
+    ? `checked`
+    : ``;
+
+  return classActiveButton;
+};
+
+const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
+  return (
+    `<section class="film-details__controls">
+       <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${getControlsItemClass(isWatchlist)}>
+       <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+       <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${getControlsItemClass(isWatched)}>
+       <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${getControlsItemClass(isFavorite)}>
+       <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+     </section>`
+  );
+};
+
 export const createFilmDetailsTemplate = (filmCard, reactions) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age} = filmCard;
+  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite} = filmCard;
 
   return (
     `<section class="film-details">
@@ -99,17 +122,7 @@ export const createFilmDetailsTemplate = (filmCard, reactions) => {
                </p>
              </div>
            </div>
-
-           <section class="film-details__controls">
-             <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-             <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-             <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
-           </section>
+           ${renderFilmCardControls(isWatchlist, isWatched, isFavorite)}
          </div>
 
          <div class="form-details__bottom-container">

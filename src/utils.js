@@ -36,5 +36,4 @@ const generateDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-
 export {getRandom, getRandomInteger, generateRandomInfo, generateRandomList, generateDate};
