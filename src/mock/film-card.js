@@ -1,3 +1,4 @@
+import {getRandom, getRandomInteger, generateRandomInfo, generateRandomList, generateDate} from "../utils.js";
 
 const FIRST_FILM = 1895;
 const TASK_COUNT = 5;
@@ -84,41 +85,6 @@ const actors = [
   `Tilda Swinton`,
 ];
 
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const getRandom = (a = 1, b = 0) => {
-  const lower = Math.min(a, b);
-  const upper = Math.max(a, b);
-
-  const random = lower + Math.random() * (upper - lower);
-  return random.toFixed(1);
-};
-
-const generateRandomInfo = (info) => {
-
-  const randomIndex = getRandomInteger(0, titles.length - 1);
-
-  return info[randomIndex];
-};
-
-const generateRandomList = (list) => {
-  const randomIndex = getRandomInteger(1, genres.length - 1);
-
-  const randomList = [];
-
-  for (let i = 0; i <= randomIndex; i++) {
-    randomList.push(list[getRandomInteger(0, list.length - 1)]);
-  }
-
-  return randomList;
-};
-
 const generateDescription = () => {
   const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
   Cras aliquet varius magna, non porta ligula feugiat eget.
@@ -135,10 +101,6 @@ const generateDescription = () => {
   const description = generateRandomList(descriptionItems);
 
   return description.join(`. `);
-};
-
-const generateDate = (start, end) => {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
 export const generateFilmCard = () => {
@@ -159,5 +121,8 @@ export const generateFilmCard = () => {
     actors: generateRandomList(actors),
     country: generateRandomInfo(countries),
     age: getRandomInteger(0, MAX_AGE),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isWatchlist: Boolean(getRandomInteger(0, 1)),
   };
 };

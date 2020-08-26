@@ -7,8 +7,26 @@ const getShortDescription = (description) => {
   return description;
 };
 
+const getControlsItemClass = (isActive) => {
+  const classActiveButton = isActive
+    ? `film-card__controls-item--active`
+    : ``;
+
+  return classActiveButton;
+};
+
+const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
+  return (
+    `<form class="film-card__controls">
+       <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${getControlsItemClass(isWatchlist)}">Add to watchlist</button>
+       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${getControlsItemClass(isWatched)}">Mark as watched</button>
+       <button class="film-card__controls-item button film-card__controls-item--favorite ${getControlsItemClass(isFavorite)}">Mark as favorite</button>
+     </form>`
+  );
+};
+
 export const createFilmCardTemplate = (filmCard) => {
-  const {title, poster, comments, description, release, rating, genres, runtime} = filmCard;
+  const {title, poster, comments, description, release, rating, genres, runtime, isWatchlist, isWatched, isFavorite} = filmCard;
   const shortDescription = getShortDescription(description);
   return (
     `<article class="film-card">
@@ -22,10 +40,7 @@ export const createFilmCardTemplate = (filmCard) => {
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${shortDescription}</p>
         <a class="film-card__comments">${comments} comments</a>
-        <form class="film-card__controls">
-          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-        </form>
+        ${renderFilmCardControls(isWatchlist, isWatched, isFavorite)}
       </article>`
   );
 };
