@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const renderGenres = (genres) => {
   let listGenres = ``;
 
@@ -55,7 +57,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
   );
 };
 
-export const createFilmDetailsTemplate = (filmCard) => {
+const createFilmDetailsTemplate = (filmCard) => {
   const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
 
   return (
@@ -169,3 +171,26 @@ export const createFilmDetailsTemplate = (filmCard) => {
     `
   );
 };
+
+export default class FilmDetails {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
