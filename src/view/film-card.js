@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const MAX_DESCRIPTION_LENGHT = 140;
 
 const getShortDescription = (description) => {
@@ -25,7 +27,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
   );
 };
 
-export const createFilmCardTemplate = (filmCard) => {
+const createFilmCardTemplate = (filmCard) => {
   const {title, poster, comments, description, release, rating, genres, runtime, isWatchlist, isWatched, isFavorite} = filmCard;
   const shortDescription = getShortDescription(description);
   return (
@@ -44,3 +46,26 @@ export const createFilmCardTemplate = (filmCard) => {
       </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

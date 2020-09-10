@@ -1,11 +1,11 @@
-const getRandomInteger = (a = 0, b = 1) => {
+export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getRandom = (a = 1, b = 0) => {
+export const getRandom = (a = 1, b = 0) => {
   const lower = Math.min(a, b);
   const upper = Math.max(a, b);
 
@@ -13,14 +13,14 @@ const getRandom = (a = 1, b = 0) => {
   return random.toFixed(1);
 };
 
-const generateRandomInfo = (info) => {
+export const generateRandomInfo = (info) => {
 
   const randomIndex = getRandomInteger(0, info.length - 1);
 
   return info[randomIndex];
 };
 
-const generateRandomList = (list) => {
+export const generateRandomList = (list) => {
   const randomIndex = getRandomInteger(1, list.length - 1);
 
   const randomList = [];
@@ -32,8 +32,33 @@ const generateRandomList = (list) => {
   return randomList;
 };
 
-const generateDate = (start, end) => {
+export const generateDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-export {getRandom, getRandomInteger, generateRandomInfo, generateRandomList, generateDate};
+export const renderTemplate = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const RenderPosition = {
+  AFTEREND: `afterend`,
+  BEFOREEND: `beforeend`
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTEREND:
+      container.after(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
