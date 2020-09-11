@@ -4,7 +4,7 @@ import FilmsContainer from "../view/films-container.js";
 import FilmCard from "../view/film-card.js";
 import ShowMoreBtn from "../view/show-more.js";
 import FilmDetails from "../view/film-details.js";
-import NoFilms from "./view/no-film.js";
+import NoFilms from "../view/no-film.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 
 const COUNT_PER_STEP = 5;
@@ -84,7 +84,7 @@ export default class Films {
   }
 
   _renderNoFilms() {
-    // Метод для рендеринга заглушки
+    render(this._filmsList, this._noFilmsComponent, RenderPosition.BEFOREEND);
   }
 
   _handleShowMoreBtnClick() {
@@ -112,6 +112,11 @@ export default class Films {
   }
 
   _renderContent() {
+    if (this._filmCards.length === 0) {
+      this._renderNoFilms();
+      return;
+    }
+
     this._renderFilmsList();
   }
 }

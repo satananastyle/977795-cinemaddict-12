@@ -22,7 +22,7 @@ render(siteMainElement, new Sort(), RenderPosition.BEFOREEND);
 const filmsPresenter = new FilmsPresenter(siteMainElement);
 filmsPresenter.init(filmCards);
 
-
+// Здесь отрисовка топа и самых закомментировных фильмов. Убрала до работы над сортировкой
 // for (let i = 0; i < COUNT_TOP_FILMS; i++) {
 //   render(siteContent.getElement(), new FilmsExtra().getElement(), RenderPosition.BEFOREEND);
 // }
