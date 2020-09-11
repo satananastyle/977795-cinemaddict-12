@@ -4,6 +4,7 @@ import FilmsContainer from "../view/films-container.js";
 import FilmCard from "../view/film-card.js";
 import ShowMoreBtn from "../view/show-more.js";
 import FilmDetails from "../view/film-details.js";
+import NoFilms from "./view/no-film.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 
 const COUNT_PER_STEP = 5;
@@ -20,7 +21,7 @@ export default class Films {
 
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
 
-    // this._noFilmsComponent = new NoFilms();
+    this._noFilmsComponent = new NoFilms();
   }
 
   init(filmCards) {
@@ -82,9 +83,9 @@ export default class Films {
       .forEach((film) => this._renderFilm(this._filmsContainer, film));
   }
 
-  // _renderNoFilms() {
-  //   // Метод для рендеринга заглушки
-  // }
+  _renderNoFilms() {
+    // Метод для рендеринга заглушки
+  }
 
   _handleShowMoreBtnClick() {
     this._renderFilms(this._renderedCount, this._renderedCount + COUNT_PER_STEP);
