@@ -1,4 +1,4 @@
-import {generateRandomInfo, generateDate} from "../utils.js";
+import {generateRandomInfo, generateDate} from "../utils/common-mock.js";
 
 const messages = [
   `Interesting setting and a good cast`,

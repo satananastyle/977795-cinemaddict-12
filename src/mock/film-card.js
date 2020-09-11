@@ -1,4 +1,5 @@
-import {getRandom, getRandomInteger, generateRandomInfo, generateRandomList, generateDate} from "../utils.js";
+import {getRandom, getRandomInteger} from "../utils/common.js";
+import {generateRandomInfo, generateRandomList, generateDate} from "../utils/common-mock.js";
 import {generateComment} from "./comments.js";
 
 const FIRST_FILM = 1895;

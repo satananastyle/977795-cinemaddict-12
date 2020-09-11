@@ -8,7 +8,7 @@ import FilmsExtra from "./view/films-extra.js";
 import FilmDetails from "./view/film-details.js";
 import {generateFilmCard} from "./mock/film-card.js";
 import {generateFilter} from "./mock/filters.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 
 const COUNT_ALL_FILMS = 22;
 const COUNT_TOP_FILMS = 2;
@@ -22,11 +22,11 @@ const renderFilm = (filmsList, film) => {
   const filmDetails = new FilmDetails(film);
 
   const showDetails = () => {
-    filmsList.appendChild(filmDetails.getElement());
+    render(filmsList, filmDetails, RenderPosition.BEFOREEND);
   };
 
   const hiddenDetails = () => {
-    filmsList.removeChild(filmDetails.getElement());
+    remove(filmDetails);
   };
 
   const onEscKeyDown = (evt) => {
@@ -56,7 +56,7 @@ const renderFilm = (filmsList, film) => {
     hiddenDetails();
   });
 
-  render(filmsList, filmCard.getElement(), RenderPosition.BEFOREEND);
+  render(filmsList, filmCard, RenderPosition.BEFOREEND);
 };
 
 const siteHeaderElement = document.querySelector(`.header`);
@@ -64,10 +64,10 @@ const siteMainElement = document.querySelector(`.main`);
 
 const siteContent = new FilmsList();
 
-render(siteHeaderElement, new Header().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Filter(filters).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Sort().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, siteContent.getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new Header(), RenderPosition.BEFOREEND);
+render(siteMainElement, new Filter(filters), RenderPosition.BEFOREEND);
+render(siteMainElement, new Sort(), RenderPosition.BEFOREEND);
+render(siteMainElement, siteContent, RenderPosition.BEFOREEND);
 
 for (let i = 0; i < Math.min(filmCards.length, COUNT_PER_STEP); i++) {
   renderFilm(siteContent.getElement().querySelector(`.films-list .films-list__container`), filmCards[i]);
@@ -78,7 +78,7 @@ if (filmCards.length > COUNT_PER_STEP) {
 
   const showMoreBtnComponent = new ShowMoreBtn();
 
-  render(siteContent.getElement().querySelector(`.films-list .films-list__container`), showMoreBtnComponent.getElement(), RenderPosition.AFTEREND);
+  render(siteContent.getElement().querySelector(`.films-list .films-list__container`), showMoreBtnComponent, RenderPosition.AFTEREND);
 
   showMoreBtnComponent.setClickHandler(() => {
     filmCards
@@ -88,8 +88,7 @@ if (filmCards.length > COUNT_PER_STEP) {
     renderedCount += COUNT_PER_STEP;
 
     if (renderedCount >= filmCards.length) {
-      showMoreBtnComponent.getElement().remove();
-      showMoreBtnComponent.removeElement();
+      remove(showMoreBtnComponent);
     }
   });
 }
