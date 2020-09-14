@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const MAX_DESCRIPTION_LENGHT = 140;
 
@@ -47,25 +47,24 @@ const createFilmCardTemplate = (filmCard) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends Abstract {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(selector, callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(selector).addEventListener(`click`, this._clickHandler);
   }
 }

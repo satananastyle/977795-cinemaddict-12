@@ -1,119 +1,36 @@
 import Header from "./view/header.js";
 import Filter from "./view/navigation.js";
 import Sort from "./view/sort.js";
-import FilmsList from "./view/films-list.js";
-import FilmCard from "./view/film-card.js";
-import ShowMoreBtn from "./view/show-more.js";
-import FilmsExtra from "./view/films-extra.js";
-import FilmDetails from "./view/film-details.js";
-import NoFilms from "./view/no-film.js";
 import {generateFilmCard} from "./mock/film-card.js";
 import {generateFilter} from "./mock/filters.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition} from "./utils/render.js";
+import FilmsPresenter from "./presenter/films.js";
 
 const COUNT_ALL_FILMS = 22;
-const COUNT_TOP_FILMS = 2;
-const COUNT_PER_STEP = 5;
+// const COUNT_TOP_FILMS = 2;
 
 const filmCards = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
 const filters = generateFilter(filmCards);
 
-const renderFilm = (filmsList, film) => {
-  const filmCard = new FilmCard(film);
-  const filmDetails = new FilmDetails(film);
-
-  const showDetails = () => {
-    filmsList.appendChild(filmDetails.getElement());
-  };
-
-  const hiddenDetails = () => {
-    filmsList.removeChild(filmDetails.getElement());
-  };
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      hiddenDetails();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  filmCard.getElement().querySelector(`.film-card__title`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    showDetails();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmCard.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    showDetails();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmCard.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    showDetails();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    hiddenDetails();
-  });
-
-  render(filmsList, filmCard.getElement(), RenderPosition.BEFOREEND);
-};
-
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, new Header().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Filter(filters).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Sort().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new Header(), RenderPosition.BEFOREEND);
+render(siteMainElement, new Filter(filters), RenderPosition.BEFOREEND);
+render(siteMainElement, new Sort(), RenderPosition.BEFOREEND);
 
-if (filmCards.length === 0) {
-  render(siteMainElement, new NoFilms().getElement(), RenderPosition.BEFOREEND);
-} else {
-  const siteContent = new FilmsList();
+const filmsPresenter = new FilmsPresenter(siteMainElement);
+filmsPresenter.init(filmCards);
 
-  render(siteMainElement, siteContent.getElement(), RenderPosition.BEFOREEND);
+// Здесь отрисовка топа и самых закомментировных фильмов. Убрала до работы над сортировкой
+// for (let i = 0; i < COUNT_TOP_FILMS; i++) {
+//   render(siteContent.getElement(), new FilmsExtra().getElement(), RenderPosition.BEFOREEND);
+// }
 
-  for (let i = 0; i < Math.min(filmCards.length, COUNT_PER_STEP); i++) {
-    renderFilm(siteContent.getElement().querySelector(`.films-list .films-list__container`), filmCards[i]);
-  }
+// const siteFilmsExtraListElements = document.querySelectorAll(`.films-list--extra .films-list__container`);
 
-  if (filmCards.length > COUNT_PER_STEP) {
-    let renderedCount = COUNT_PER_STEP;
-
-    const showMoreBtnComponent = new ShowMoreBtn();
-
-    render(siteContent.getElement().querySelector(`.films-list .films-list__container`), showMoreBtnComponent.getElement(), RenderPosition.AFTEREND);
-
-    showMoreBtnComponent.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      filmCards
-        .slice(renderedCount, renderedCount + COUNT_PER_STEP)
-        .forEach((film) => renderFilm(siteContent.getElement().querySelector(`.films-list .films-list__container`), film));
-
-      renderedCount += COUNT_PER_STEP;
-
-      if (renderedCount >= filmCards.length) {
-        showMoreBtnComponent.getElement().remove();
-        showMoreBtnComponent.removeElement();
-      }
-    });
-  }
-
-  for (let i = 0; i < COUNT_TOP_FILMS; i++) {
-    render(siteContent.getElement(), new FilmsExtra().getElement(), RenderPosition.BEFOREEND);
-  }
-
-  const siteFilmsExtraListElements = document.querySelectorAll(`.films-list--extra .films-list__container`);
-
-  siteFilmsExtraListElements.forEach((element) => {
-    for (let i = 0; i < COUNT_TOP_FILMS; i++) {
-      renderFilm(element, filmCards[i]);
-    }
-  });
-}
-
+// siteFilmsExtraListElements.forEach((element) => {
+//   for (let i = 0; i < COUNT_TOP_FILMS; i++) {
+//     renderFilm(element, filmCards[i]);
+//   }
+// });
