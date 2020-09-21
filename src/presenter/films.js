@@ -2,10 +2,13 @@ import Content from "../view/content.js";
 import FilmsList from "../view/films-list.js";
 import FilmsContainer from "../view/films-container.js";
 import FilmCard from "../view/film-card.js";
+import Sort from "../view/sort.js";
 import ShowMoreBtn from "../view/show-more.js";
 import FilmDetails from "../view/film-details.js";
 import NoFilms from "../view/no-film.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
+import {sortRating, sortDate} from "../utils/sort.js";
+import {SortType} from "../const.js";
 
 const COUNT_PER_STEP = 5;
 
@@ -13,26 +16,55 @@ export default class Films {
   constructor(siteMainElement) {
     this._siteMainElement = siteMainElement;
     this._renderedCount = COUNT_PER_STEP;
+    this._currentSortType = SortType.DEFAULT;
 
     this._siteContent = new Content();
+    this._sort = new Sort();
     this._filmsList = new FilmsList();
     this._filmsContainer = new FilmsContainer();
     this._showMoreBtn = new ShowMoreBtn();
+    this._noFilmsComponent = new NoFilms();
 
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
-
-    this._noFilmsComponent = new NoFilms();
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(filmCards) {
     this._filmCards = filmCards.slice();
-
-    render(this._siteMainElement, this._siteContent, RenderPosition.BEFOREEND);
-    render(this._siteContent, this._filmsList, RenderPosition.BEFOREEND);
-    render(this._filmsList, this._filmsContainer, RenderPosition.BEFOREEND);
-
+    this._sourcedFilmCards = filmCards.slice();
 
     this._renderContent();
+  }
+
+  _sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._filmCards.sort(sortDate);
+        break;
+      case SortType.RATING:
+        this._filmCards.sort(sortRating);
+        break;
+      default:
+        this._filmCards = this._sourcedFilmCards.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortFilms(sortType);
+    this._clearFilmsList();
+    this._renderFilmsList();
+  }
+
+  _renderSort() {
+    render(this._siteMainElement, this._sort, RenderPosition.BEFOREEND);
+    this._sort.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderFilm(container, film) {
@@ -111,11 +143,21 @@ export default class Films {
     }
   }
 
+  _clearFilmsList() {
+    this._filmsContainer.getElement().innerHTML = ``;
+    this._renderedCount = COUNT_PER_STEP;
+  }
+
   _renderContent() {
     if (this._filmCards.length === 0) {
       this._renderNoFilms();
       return;
     }
+    this._renderSort();
+
+    render(this._siteMainElement, this._siteContent, RenderPosition.BEFOREEND);
+    render(this._siteContent, this._filmsList, RenderPosition.BEFOREEND);
+    render(this._filmsList, this._filmsContainer, RenderPosition.BEFOREEND);
 
     this._renderFilmsList();
   }

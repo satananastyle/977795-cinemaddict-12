@@ -1,6 +1,5 @@
 import Header from "./view/header.js";
 import Filter from "./view/navigation.js";
-import Sort from "./view/sort.js";
 import {generateFilmCard} from "./mock/film-card.js";
 import {generateFilter} from "./mock/filters.js";
 import {render, RenderPosition} from "./utils/render.js";
@@ -17,7 +16,6 @@ const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, new Header(), RenderPosition.BEFOREEND);
 render(siteMainElement, new Filter(filters), RenderPosition.BEFOREEND);
-render(siteMainElement, new Sort(), RenderPosition.BEFOREEND);
 
 const filmsPresenter = new FilmsPresenter(siteMainElement);
 filmsPresenter.init(filmCards);
