@@ -1,5 +1,5 @@
 import {getRandom, getRandomInteger} from "../utils/common.js";
-import {generateRandomInfo, generateRandomList, generateDate} from "../utils/common-mock.js";
+import {generateRandomInfo, generateRandomList, generateDate, generateId} from "../utils/common-mock.js";
 import {generateComment} from "./comments.js";
 
 const FIRST_FILM = 1895;
@@ -108,6 +108,7 @@ const generateDescription = () => {
 
 export const generateFilmCard = () => {
   return {
+    id: generateId(),
     title: generateRandomInfo(titles),
     poster: generateRandomInfo(posters),
     description: generateDescription(),
