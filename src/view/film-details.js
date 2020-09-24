@@ -1,4 +1,5 @@
 import Abstract from "./abstract.js";
+import {formatDurationInMinutes, formatDateOfRelease, formatCommentDate} from "../utils/common-mock.js";
 
 const renderGenres = (genres) => {
   let listGenres = ``;
@@ -23,7 +24,7 @@ const renderComments = (comments, reactions) => {
            <p class="film-details__comment-text">${reactions[i].message}</p>
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${reactions[i].author}</span>
-             <span class="film-details__comment-day">${reactions[i].date.toLocaleString(`ko-KR`, {day: `numeric`, month: `numeric`, year: `numeric`})}</span>
+             <span class="film-details__comment-day">${formatCommentDate(reactions[i].date)}</span>
              <button class="film-details__comment-delete">Delete</button>
            </p>
          </div>
@@ -58,7 +59,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
 };
 
 const createFilmDetailsTemplate = (filmCard) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
+  const {title, poster, comments, description, release, rating, genres, duration, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
 
   return (
     `<section class="film-details">
@@ -101,11 +102,11 @@ const createFilmDetailsTemplate = (filmCard) => {
                  </tr>
                  <tr class="film-details__row">
                    <td class="film-details__term">Release Date</td>
-                   <td class="film-details__cell">${release.toLocaleString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`})}</td>
+                   <td class="film-details__cell">${formatDateOfRelease(release)}</td>
                  </tr>
                  <tr class="film-details__row">
-                   <td class="film-details__term">Runtime</td>
-                   <td class="film-details__cell">${runtime.hours}h ${runtime.min}m</td>
+                   <td class="film-details__term">duration</td>
+                   <td class="film-details__cell">${formatDurationInMinutes(duration)}</td>
                  </tr>
                  <tr class="film-details__row">
                    <td class="film-details__term">Country</td>
