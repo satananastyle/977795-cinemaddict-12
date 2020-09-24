@@ -2,10 +2,17 @@ import FilmCard from "../view/film-card.js";
 import FilmDetails from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  SHOW: `SHOW`
+};
+
 export default class Film {
-  constructor(filmsContainer, changeData) {
+  constructor(filmsContainer, changeData, changeMode) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
+    this._mode = Mode.DEFAULT;
 
     this._filmCard = null;
     this._filmDetails = null;
@@ -17,6 +24,8 @@ export default class Film {
     this._handlerWatchlistClick = this._handlerWatchlistClick.bind(this);
     this._handlerWatchedClick = this._handlerWatchedClick.bind(this);
     this._handlerFavoriteClick = this._handlerFavoriteClick.bind(this);
+
+    this._handlerEmojiClick = this._handlerEmojiClick.bind(this);
   }
 
   init(film) {
@@ -28,13 +37,17 @@ export default class Film {
     this._filmCard = new FilmCard(film);
     this._filmDetails = new FilmDetails(film);
 
-    this._filmCard.setClickHandler(`.film-card__title`, this._handlerShowClick);
-    this._filmCard.setClickHandler(`.film-card__poster`, this._handlerShowClick);
-    this._filmCard.setClickHandler(`.film-card__comments`, this._handlerShowClick);
+    this._filmCard.setHandler(this._handlerShowClick);
 
     this._filmCard.setWatchlistClickHandler(this._handlerWatchlistClick);
     this._filmCard.setWatchedClickHandler(this._handlerWatchedClick);
     this._filmCard.setFavoriteClickHandler(this._handlerFavoriteClick);
+
+    this._filmDetails.setClickHandler(this._handlerCloseDetails);
+    this._filmDetails.setWatchlistClickHandler(this._handlerWatchlistClick);
+    this._filmDetails.setWatchedClickHandler(this._handlerWatchedClick);
+    this._filmDetails.setFavoriteClickHandler(this._handlerFavoriteClick);
+    this._filmDetails.setEmojiClickHandler(this._handlerEmojiClick);
 
 
     if (prevFilmCard === null || prevFilmDetails === null) {
@@ -59,18 +72,24 @@ export default class Film {
     remove(this._filmDetails);
   }
 
-  _handlerShowClick() {
-    render(this._filmsContainer, this._filmDetails, RenderPosition.BEFOREEND);
-    this._filmDetails.setClickHandler(this._handlerCloseDetails);
-    this._filmDetails.setWatchlistClickHandler(this._handlerWatchlistClick);
-    this._filmDetails.setWatchedClickHandler(this._handlerWatchedClick);
-    this._filmDetails.setFavoriteClickHandler(this._handlerFavoriteClick);
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      remove(this._filmDetails);
+    }
   }
 
-  _handlerCloseDetails(film) {
-    this._changeData(film);
+  _handlerShowClick() {
+    this._changeMode();
+    this._filmDetails.updateElement();
+    render(this._filmsContainer, this._filmDetails, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
+
+    this._mode = Mode.SHOW;
+  }
+
+  _handlerCloseDetails() {
     remove(this._filmDetails);
+    this._mode = Mode.DEFAULT;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
@@ -115,5 +134,8 @@ export default class Film {
             }
         )
     );
+  }
+
+  _handlerEmojiClick() {
   }
 }

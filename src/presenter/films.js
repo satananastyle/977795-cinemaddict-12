@@ -27,6 +27,7 @@ export default class Films {
     this._noFilmsComponent = new NoFilms();
 
     this._handlerFilmChange = this._handlerFilmChange.bind(this);
+    this._handlerModeChange = this._handlerModeChange.bind(this);
     this._handlerShowMoreBtnClick = this._handlerShowMoreBtnClick.bind(this);
     this._handlerSortTypeChange = this._handlerSortTypeChange.bind(this);
   }
@@ -36,6 +37,12 @@ export default class Films {
     this._sourcedFilmCards = filmCards.slice();
 
     this._renderContent();
+  }
+
+  _handlerModeChange() {
+    Object
+    .values(this._filmPresenter)
+    .forEach((presenter) => presenter.resetView());
   }
 
   _handlerFilmChange(updatedFilm) {
@@ -76,7 +83,7 @@ export default class Films {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsContainer, this._handlerFilmChange);
+    const filmPresenter = new FilmPresenter(this._filmsContainer, this._handlerFilmChange, this._handlerModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }

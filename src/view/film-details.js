@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import Smart from "./smart.js";
 
 const renderGenres = (genres) => {
   let listGenres = ``;
@@ -8,6 +8,16 @@ const renderGenres = (genres) => {
   }
 
   return listGenres;
+};
+
+const renderGenreContainer = (genres) => {
+  const genreFlag = genres.length > 1 ? `Genres` : `Genre`;
+  return (
+    `<td class="film-details__term">${genreFlag}</td>
+     <td class="film-details__cell">
+       ${renderGenres(genres)}
+    </td>`
+  );
 };
 
 const renderComments = (comments, reactions) => {
@@ -112,10 +122,7 @@ const createFilmDetailsTemplate = (filmCard) => {
                    <td class="film-details__cell">${country}</td>
                  </tr>
                  <tr class="film-details__row">
-                   <td class="film-details__term">Genres</td>
-                   <td class="film-details__cell">
-                     ${renderGenres(genres)}
-                   </td>
+                   ${renderGenreContainer(genres)}
                  </tr>
                </table>
 
@@ -172,23 +179,24 @@ const createFilmDetailsTemplate = (filmCard) => {
   );
 };
 
-export default class FilmDetails extends Abstract {
-  constructor(film) {
+export default class FilmDetails extends Smart {
+  constructor(data) {
     super();
-    this._film = film;
+    this._data = data;
     this._clickHandler = this._clickHandler.bind(this);
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createFilmDetailsTemplate(this._data);
   }
 
   _clickHandler(evt) {
     evt.preventDefault();
-    this._callback.click(this._film);
+    this._callback.click();
   }
 
   _watchlistClickHandler(evt) {
@@ -204,6 +212,25 @@ export default class FilmDetails extends Abstract {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
+  }
+
+  _emojiClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.emojiClick();
+
+    const emojiItems = document.querySelectorAll(`.film-details__emoji-item`);
+
+    emojiItems.forEach((emojiItem) => {
+      if (evt.target.value !== emojiItem.value) {
+        emojiItem.removeAttribute(`checked`);
+      } else {
+        emojiItem.setAttribute(`checked`, ``);
+      }
+    });
+
+    const addEmojiLabel = document.querySelector(`.film-details__add-emoji-label`);
+    const addEmojiImage = `<img src="./images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`;
+    addEmojiLabel.innerHTML = addEmojiImage;
   }
 
   setClickHandler(callback) {
@@ -224,5 +251,22 @@ export default class FilmDetails extends Abstract {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  setEmojiClickHandler(callback) {
+    this._callback.emojiClick = callback;
+    const emojis = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    emojis.forEach((emoji) => {
+      emoji.addEventListener(`click`, this._emojiClickHandler);
+    });
+  }
+
+  restoreHandlers() {
+    this.setEmojiClickHandler(this._callback.emojiClick);
+    this.setClickHandler(this._callback.click);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
   }
 }
