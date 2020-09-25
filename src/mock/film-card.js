@@ -1,6 +1,6 @@
 import {getRandom, getRandomInteger} from "../utils/common.js";
-import {generateRandomInfo, generateRandomList, generateDate} from "../utils/common-mock.js";
-import {generateComment} from "./comments.js";
+import {generateRandomInfo, generateRandomList, generateDate, generateId} from "../utils/common-mock.js";
+import {generateComment, generateLocalComment} from "./comments.js";
 
 const FIRST_FILM = 1895;
 const TASK_COUNT = 5;
@@ -107,16 +107,17 @@ const generateDescription = () => {
 
 const generateDuration = () => getRandomInteger(MIN_DURATION_MIN, MAX_DURATION_MIN);
 
+const comments = getRandomInteger(0, TASK_COUNT);
 
 export const generateFilmCard = () => {
   return {
+    id: generateId(),
     title: generateRandomInfo(titles),
     poster: generateRandomInfo(posters),
     description: generateDescription(),
-    comments: getRandomInteger(0, TASK_COUNT),
-    get reactions() {
-      return (new Array(this.comments).fill().map(generateComment));
-    },
+    comments,
+    reactions: new Array(comments).fill().map(generateComment),
+    localComment: generateLocalComment(),
     rating: getRandom(0, 10),
     release: generateDate(new Date(FIRST_FILM, 0, 1), new Date()),
     genres: generateRandomList(genres),

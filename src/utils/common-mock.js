@@ -35,3 +35,4 @@ export const formatDurationInMinutes = (duration) => {
 
 export const formatDateOfRelease = (date) => moment(date).format(`DD MMMM YYYY`);
 export const formatCommentDate = (date) => moment(date).format(`YYYY/MM/DD HH:mm`);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
