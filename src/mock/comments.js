@@ -31,3 +31,11 @@ export const generateComment = () => {
     date: generateDate(new Date(2006, 0, 1), new Date()),
   };
 };
+
+export const generateLocalComment = () => {
+  return {
+    comment: null,
+    date: null,
+    emotion: null,
+  };
+};

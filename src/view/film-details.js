@@ -44,6 +44,42 @@ const renderComments = (comments, reactions) => {
   return listReactions;
 };
 
+const renderLocalComment = (localComment) => {
+  return (
+    `<div class="film-details__new-comment">
+       <div for="add-emoji" class="film-details__add-emoji-label">
+         ${localComment.emotion ? `<img src="./images/emoji/${localComment.emotion}.png" width="55" height="55" alt="emoji-${localComment.emotion}"></img>` : ``}
+       </div>
+
+       <label class="film-details__comment-label">
+         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+       </label>
+
+       <div class="film-details__emoji-list">
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+         <label class="film-details__emoji-label" for="emoji-smile">
+           <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+         <label class="film-details__emoji-label" for="emoji-sleeping">
+           <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+         <label class="film-details__emoji-label" for="emoji-puke">
+           <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+         <label class="film-details__emoji-label" for="emoji-angry">
+           <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+         </label>
+       </div>
+     </div>`
+  );
+};
+
 const getControlsItemClass = (isActive) => {
   const classActiveButton = isActive
     ? `checked`
@@ -67,8 +103,8 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
   );
 };
 
-const createFilmDetailsTemplate = (filmCard) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
+const createFilmDetailsTemplate = (data) => {
+  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
 
   return (
     `<section class="film-details">
@@ -141,36 +177,7 @@ const createFilmDetailsTemplate = (filmCard) => {
              <ul class="film-details__comments-list">
                ${renderComments(comments, reactions)}
              </ul>
-
-             <div class="film-details__new-comment">
-               <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-               <label class="film-details__comment-label">
-                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-               </label>
-
-               <div class="film-details__emoji-list">
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-                 <label class="film-details__emoji-label" for="emoji-smile">
-                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                 <label class="film-details__emoji-label" for="emoji-sleeping">
-                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-                 <label class="film-details__emoji-label" for="emoji-puke">
-                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-                 <label class="film-details__emoji-label" for="emoji-angry">
-                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                 </label>
-               </div>
-             </div>
+             ${renderLocalComment(localComment)}
            </section>
          </div>
        </form>
@@ -217,20 +224,12 @@ export default class FilmDetails extends Smart {
   _emojiClickHandler(evt) {
     evt.preventDefault();
     this._callback.emojiClick();
-
-    const emojiItems = document.querySelectorAll(`.film-details__emoji-item`);
-
-    emojiItems.forEach((emojiItem) => {
-      if (evt.target.value !== emojiItem.value) {
-        emojiItem.removeAttribute(`checked`);
-      } else {
-        emojiItem.setAttribute(`checked`, ``);
-      }
-    });
-
-    const addEmojiLabel = document.querySelector(`.film-details__add-emoji-label`);
-    const addEmojiImage = `<img src="./images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`;
-    addEmojiLabel.innerHTML = addEmojiImage;
+    this.updateData(
+        {
+          localComment: {
+            emotion: evt.target.value
+          }
+        }, false);
   }
 
   setClickHandler(callback) {
@@ -255,11 +254,7 @@ export default class FilmDetails extends Smart {
 
   setEmojiClickHandler(callback) {
     this._callback.emojiClick = callback;
-    const emojis = this.getElement().querySelectorAll(`.film-details__emoji-item`);
-
-    emojis.forEach((emoji) => {
-      emoji.addEventListener(`click`, this._emojiClickHandler);
-    });
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiClickHandler);
   }
 
   restoreHandlers() {
