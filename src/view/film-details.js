@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import Smart from "./smart.js";
 
 const renderGenres = (genres) => {
   let listGenres = ``;
@@ -8,6 +8,16 @@ const renderGenres = (genres) => {
   }
 
   return listGenres;
+};
+
+const renderGenreContainer = (genres) => {
+  const genreFlag = genres.length > 1 ? `Genres` : `Genre`;
+  return (
+    `<td class="film-details__term">${genreFlag}</td>
+     <td class="film-details__cell">
+       ${renderGenres(genres)}
+    </td>`
+  );
 };
 
 const renderComments = (comments, reactions) => {
@@ -34,6 +44,42 @@ const renderComments = (comments, reactions) => {
   return listReactions;
 };
 
+const renderLocalComment = (localComment) => {
+  return (
+    `<div class="film-details__new-comment">
+       <div for="add-emoji" class="film-details__add-emoji-label">
+         ${localComment.emotion ? `<img src="./images/emoji/${localComment.emotion}.png" width="55" height="55" alt="emoji-${localComment.emotion}"></img>` : ``}
+       </div>
+
+       <label class="film-details__comment-label">
+         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+       </label>
+
+       <div class="film-details__emoji-list">
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+         <label class="film-details__emoji-label" for="emoji-smile">
+           <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+         <label class="film-details__emoji-label" for="emoji-sleeping">
+           <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+         <label class="film-details__emoji-label" for="emoji-puke">
+           <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+         </label>
+
+         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+         <label class="film-details__emoji-label" for="emoji-angry">
+           <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+         </label>
+       </div>
+     </div>`
+  );
+};
+
 const getControlsItemClass = (isActive) => {
   const classActiveButton = isActive
     ? `checked`
@@ -57,8 +103,8 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
   );
 };
 
-const createFilmDetailsTemplate = (filmCard) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
+const createFilmDetailsTemplate = (data) => {
+  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
 
   return (
     `<section class="film-details">
@@ -112,10 +158,7 @@ const createFilmDetailsTemplate = (filmCard) => {
                    <td class="film-details__cell">${country}</td>
                  </tr>
                  <tr class="film-details__row">
-                   <td class="film-details__term">Genres</td>
-                   <td class="film-details__cell">
-                     ${renderGenres(genres)}
-                   </td>
+                   ${renderGenreContainer(genres)}
                  </tr>
                </table>
 
@@ -134,36 +177,7 @@ const createFilmDetailsTemplate = (filmCard) => {
              <ul class="film-details__comments-list">
                ${renderComments(comments, reactions)}
              </ul>
-
-             <div class="film-details__new-comment">
-               <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-               <label class="film-details__comment-label">
-                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-               </label>
-
-               <div class="film-details__emoji-list">
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-                 <label class="film-details__emoji-label" for="emoji-smile">
-                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                 <label class="film-details__emoji-label" for="emoji-sleeping">
-                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-                 <label class="film-details__emoji-label" for="emoji-puke">
-                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                 </label>
-
-                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-                 <label class="film-details__emoji-label" for="emoji-angry">
-                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                 </label>
-               </div>
-             </div>
+             ${renderLocalComment(localComment)}
            </section>
          </div>
        </form>
@@ -172,15 +186,19 @@ const createFilmDetailsTemplate = (filmCard) => {
   );
 };
 
-export default class FilmDetails extends Abstract {
-  constructor(card) {
+export default class FilmDetails extends Smart {
+  constructor(data) {
     super();
-    this._card = card;
+    this._data = data;
     this._clickHandler = this._clickHandler.bind(this);
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._card);
+    return createFilmDetailsTemplate(this._data);
   }
 
   _clickHandler(evt) {
@@ -188,8 +206,62 @@ export default class FilmDetails extends Abstract {
     this._callback.click();
   }
 
+  _watchlistClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _emojiClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.emojiClick();
+    this.updateData(
+        {
+          localComment: {
+            emotion: evt.target.value
+          }
+        }, false);
+  }
+
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._watchlistClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  setEmojiClickHandler(callback) {
+    this._callback.emojiClick = callback;
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiClickHandler);
+  }
+
+  restoreHandlers() {
+    this.setEmojiClickHandler(this._callback.emojiClick);
+    this.setClickHandler(this._callback.click);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
   }
 }

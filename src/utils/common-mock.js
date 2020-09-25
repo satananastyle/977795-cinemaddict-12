@@ -22,3 +22,5 @@ export const generateRandomList = (list) => {
 export const generateDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
+
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
