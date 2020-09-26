@@ -1,4 +1,5 @@
 import Smart from "./smart.js";
+import {formatDurationInMinutes} from "../utils/common-mock.js";
 
 const MAX_DESCRIPTION_LENGHT = 140;
 
@@ -28,7 +29,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
 };
 
 const createFilmCardTemplate = (filmCard) => {
-  const {title, poster, description, release, rating, genres, runtime, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
+  const {title, poster, description, release, rating, genres, duration, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
   const shortDescription = getShortDescription(description);
   return (
     `<article class="film-card">
@@ -36,7 +37,7 @@ const createFilmCardTemplate = (filmCard) => {
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${release.getFullYear()}</span>
-          <span class="film-card__duration">${runtime.hours}h ${runtime.min}m</span>
+          <span class="film-card__duration">${formatDurationInMinutes(duration)}</span>
           <span class="film-card__genre">${genres[0]}</span>
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">
