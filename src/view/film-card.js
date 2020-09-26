@@ -28,7 +28,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
 };
 
 const createFilmCardTemplate = (filmCard) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, isWatchlist, isWatched, isFavorite} = filmCard;
+  const {title, poster, description, release, rating, genres, runtime, isWatchlist, isWatched, isFavorite, reactions} = filmCard;
   const shortDescription = getShortDescription(description);
   return (
     `<article class="film-card">
@@ -41,7 +41,7 @@ const createFilmCardTemplate = (filmCard) => {
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${shortDescription}</p>
-        <a class="film-card__comments">${comments} comments</a>
+        <a class="film-card__comments">${reactions.length} comments</a>
         ${renderFilmCardControls(isWatchlist, isWatched, isFavorite)}
       </article>`
   );

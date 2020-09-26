@@ -20,10 +20,10 @@ const renderGenreContainer = (genres) => {
   );
 };
 
-const renderComments = (comments, reactions) => {
+const renderComments = (reactions) => {
   let listReactions = ``;
 
-  for (let i = 0; i < comments; i++) {
+  for (let i = 0; i < reactions.length; i++) {
     listReactions += `
       <li class="film-details__comment">
          <span class="film-details__comment-emoji">
@@ -104,7 +104,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
 };
 
 const createFilmDetailsTemplate = (data) => {
-  const {title, poster, comments, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
+  const {title, poster, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
 
   return (
     `<section class="film-details">
@@ -172,10 +172,10 @@ const createFilmDetailsTemplate = (data) => {
 
          <div class="form-details__bottom-container">
            <section class="film-details__comments-wrap">
-             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments}</span></h3>
+             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${reactions.length}</span></h3>
 
              <ul class="film-details__comments-list">
-               ${renderComments(comments, reactions)}
+               ${renderComments(reactions)}
              </ul>
              ${renderLocalComment(localComment)}
            </section>

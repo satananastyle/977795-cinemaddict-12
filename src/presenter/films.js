@@ -13,7 +13,8 @@ import {SortType} from "../const.js";
 const COUNT_PER_STEP = 5;
 
 export default class Films {
-  constructor(siteMainElement) {
+  constructor(siteMainElement, filmsModel) {
+    this._filmsModel = filmsModel;
     this._siteMainElement = siteMainElement;
     this._renderedCount = COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
@@ -38,6 +39,11 @@ export default class Films {
 
     this._renderContent();
   }
+
+  _getFilms() {
+    return this._filmsModel.getFilms();
+  }
+
 
   _handlerModeChange() {
     Object
