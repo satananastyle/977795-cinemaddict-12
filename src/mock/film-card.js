@@ -4,8 +4,8 @@ import {generateComment, generateLocalComment} from "./comments.js";
 
 const FIRST_FILM = 1895;
 const TASK_COUNT = 5;
-const MAX_RUNTIME_MIN = 59;
-const MAX_RUNTIME_HOURS = 3;
+const MAX_DURATION_MIN = 180;
+const MIN_DURATION_MIN = 30;
 const MAX_AGE = 18;
 
 const titles = [
@@ -105,6 +105,8 @@ const generateDescription = () => {
   return description.join(`. `);
 };
 
+const generateDuration = () => getRandomInteger(MIN_DURATION_MIN, MAX_DURATION_MIN);
+
 const comments = getRandomInteger(0, TASK_COUNT);
 
 export const generateFilmCard = () => {
@@ -119,10 +121,7 @@ export const generateFilmCard = () => {
     rating: getRandom(0, 10),
     release: generateDate(new Date(FIRST_FILM, 0, 1), new Date()),
     genres: generateRandomList(genres),
-    runtime: {
-      hours: getRandomInteger(0, MAX_RUNTIME_HOURS),
-      min: getRandomInteger(0, MAX_RUNTIME_MIN)
-    },
+    duration: generateDuration(),
     director: generateRandomInfo(directors),
     writers: generateRandomList(writers),
     actors: generateRandomList(actors),
