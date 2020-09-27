@@ -83,10 +83,8 @@ export default class Films {
       case UpdateType.MINOR:
         this._clearContent();
         this._renderContent();
-        // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this._clearContent({resetRenderedFilmCount: true, resetSortType: true});
         this._renderContent();
         break;
@@ -134,6 +132,7 @@ export default class Films {
     const films = this._getFilms().slice(this._renderedFilmCount, newRenderedFilmCount);
 
     this._renderFilms(films);
+    this._renderedFilmCount = newRenderedFilmCount;
 
     if (this._renderedFilmCount >= filmCount) {
       remove(this._showMoreBtn);
@@ -151,13 +150,6 @@ export default class Films {
     render(this._filmsContainer, this._showMoreBtn, RenderPosition.AFTEREND);
   }
 
-  _renderFilmsList() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCount, COUNT_PER_STEP));
-
-    this._renderFilms(films);
-  }
-
   _renderContent() {
     const films = this._getFilms();
     const filmCount = films.length;
@@ -173,8 +165,8 @@ export default class Films {
     render(this._siteContent, this._filmsList, RenderPosition.BEFOREEND);
     render(this._filmsList, this._filmsContainer, RenderPosition.BEFOREEND);
 
-    this._renderFilmsList(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
-
+    this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
+    console.log(this._renderedFilmCount);
     if (filmCount > this._renderedFilmCount) {
       this._renderShowMoreBtn();
     }
