@@ -9,10 +9,10 @@ const messages = [
 ];
 
 const emojis = [
-  `angry.png`,
-  `puke.png`,
-  `sleeping.png`,
-  `smile.png`,
+  `angry`,
+  `puke`,
+  `sleeping`,
+  `smile`,
 ];
 
 const autors = [
@@ -28,14 +28,14 @@ export const generateComment = () => {
     id: generateId(),
     author: generateRandomInfo(autors),
     message: generateRandomInfo(messages),
-    emoji: generateRandomInfo(emojis),
+    emotion: generateRandomInfo(emojis) + `.png`,
     date: generateDate(new Date(2006, 0, 1), new Date()),
   };
 };
 
 export const generateLocalComment = () => {
   return {
-    comment: null,
+    message: null,
     date: null,
     emotion: null,
   };

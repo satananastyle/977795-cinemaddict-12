@@ -69,17 +69,14 @@ export default class Films {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.ADD_COMMENT:
-        this._filmsModel.addComment(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this._filmsModel.deleteComment(updateType, update);
-        break;
     }
   }
 
-  _handlerModelEvent(updateType) {
+  _handlerModelEvent(updateType, data) {
     switch (updateType) {
+      case UpdateType.PATCH:
+        this._filmPresenter[data.id].init(data);
+        break;
       case UpdateType.MINOR:
         this._clearContent();
         this._renderContent();
@@ -166,7 +163,6 @@ export default class Films {
     render(this._filmsList, this._filmsContainer, RenderPosition.BEFOREEND);
 
     this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
-    console.log(this._renderedFilmCount);
     if (filmCount > this._renderedFilmCount) {
       this._renderShowMoreBtn();
     }
@@ -187,9 +183,6 @@ export default class Films {
     if (resetRenderedFilmCount) {
       this._renderedFilmCount = COUNT_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this._renderedFilmCount = Math.min(filmCount, this._renderedFilmCount);
     }
 

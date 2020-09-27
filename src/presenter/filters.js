@@ -21,7 +21,6 @@ export default class Filter {
 
   init() {
     this._currentFilter = this._filterModel.getFilter();
-    console.log(this._currentFilter);
 
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;

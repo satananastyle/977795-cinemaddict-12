@@ -1,5 +1,5 @@
 import Smart from "./smart.js";
-import {formatDurationInMinutes, formatDateOfRelease, formatCommentDate} from "../utils/common-mock.js";
+import {formatDurationInMinutes, formatDateOfRelease, formatCommentDate, generateId} from "../utils/common-mock.js";
 
 const renderGenres = (genres) => {
   let listGenres = ``;
@@ -28,14 +28,14 @@ const renderComments = (reactions) => {
     listReactions += `
       <li class="film-details__comment">
          <span class="film-details__comment-emoji">
-           <img src="./images/emoji/${reactions[i].emoji}" width="55" height="55" alt="emoji-smile">
+           <img src="./images/emoji/${reactions[i].emotion}" width="55" height="55" alt="emoji-${reactions[i].emotion}">
          </span>
          <div>
            <p class="film-details__comment-text">${reactions[i].message}</p>
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${reactions[i].author}</span>
              <span class="film-details__comment-day">${formatCommentDate(reactions[i].date)}</span>
-             <button class="film-details__comment-delete">Delete</button>
+             <button class="film-details__comment-delete" data-comment-id="${reactions[i].id}-${i}">Delete</button>
            </p>
          </div>
        </li>
@@ -49,7 +49,7 @@ const renderLocalComment = (localComment) => {
   return (
     `<div class="film-details__new-comment">
        <div for="add-emoji" class="film-details__add-emoji-label">
-         ${localComment.emotion ? `<img src="./images/emoji/${localComment.emotion}.png" width="55" height="55" alt="emoji-${localComment.emotion}"></img>` : ``}
+         ${localComment.emotion ? `<img src="./images/emoji/${localComment.emotion}" width="55" height="55" alt="emoji-${localComment.emotion}"></img>` : ``}
        </div>
 
        <label class="film-details__comment-label">
@@ -196,7 +196,8 @@ export default class FilmDetails extends Smart {
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    // this._commentDeleteClickHandler = this._commentDeleteClickHandler.bind(this);
+    this._addCommentHandler = this._addCommentHandler.bind(this);
+    this._removeCommentHandler = this._removeCommentHandler.bind(this);
   }
 
   getTemplate() {
@@ -229,9 +230,33 @@ export default class FilmDetails extends Smart {
     this.updateData(
         {
           localComment: {
-            emotion: evt.target.value
+            emotion: evt.target.value + `.png`
           }
         }, false);
+  }
+
+  _addCommentHandler(evt) {
+    if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === 13)) {
+      evt.preventDefault();
+      const newComment = Object.assign(
+          {},
+          this._data.localComment,
+          {
+            id: generateId(),
+            message: evt.target.value,
+            author: `Current User`,
+          });
+
+      this._callback.addComment(newComment);
+    }
+  }
+
+  _removeCommentHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName !== `BUTTON`) {
+      return;
+    }
+    this._callback.removeComment(evt.target);
   }
 
   setClickHandler(callback) {
@@ -259,28 +284,23 @@ export default class FilmDetails extends Smart {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiClickHandler);
   }
 
-  // _commentDeleteClickHandler(evt) {
-  //   evt.preventDefault();
-  //   this._callback.deleteClick();
-  //   this.updateData(
-  //     {
-  //       localComment: {
-  //         emotion: evt.target.value
-  //       }
-  //     }, false);
-  // }
+  setAddCommentHandler(callback) {
+    this._callback.addComment = callback;
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentHandler);
+  }
 
-  // setDeleteClickHandler(callback) {
-  //   this._callback.deleteClick = callback;
-  //   this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._commentDeleteClickHandler);
-  // }
+  setRemoveCommentHandler(callback) {
+    this._callback.removeComment = callback;
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._removeCommentHandler);
+  }
 
   restoreHandlers() {
     this.setEmojiClickHandler(this._callback.emojiClick);
+    this.setAddCommentHandler(this._callback.addComment);
+    this.setRemoveCommentHandler(this._callback.removeComment);
     this.setClickHandler(this._callback.click);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
-    // this.setDeleteClickHandler(this._callback.deleteClick);
   }
 }
