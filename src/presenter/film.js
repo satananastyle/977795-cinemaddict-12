@@ -113,6 +113,7 @@ export default class Film {
               {
                 localComment: {
                   emotion: null,
+                  message: ``,
                 }
               }
           )

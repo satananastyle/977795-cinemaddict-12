@@ -1,5 +1,6 @@
 import Smart from "./smart.js";
 import {formatDurationInMinutes, formatDateOfRelease, formatCommentDate, generateId} from "../utils/common-mock.js";
+import he from "he";
 
 const renderGenres = (genres) => {
   let listGenres = ``;
@@ -53,7 +54,7 @@ const renderLocalComment = (localComment) => {
        </div>
 
        <label class="film-details__comment-label">
-         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(localComment.message)}</textarea>
        </label>
 
        <div class="film-details__emoji-list">
@@ -230,7 +231,8 @@ export default class FilmDetails extends Smart {
     this.updateData(
         {
           localComment: {
-            emotion: evt.target.value + `.png`
+            emotion: evt.target.value + `.png`,
+            message: this.getElement().querySelector(`.film-details__comment-input`).value,
           }
         }, false);
   }

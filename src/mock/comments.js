@@ -35,7 +35,7 @@ export const generateComment = () => {
 
 export const generateLocalComment = () => {
   return {
-    message: null,
+    message: ``,
     date: null,
     emotion: null,
   };
