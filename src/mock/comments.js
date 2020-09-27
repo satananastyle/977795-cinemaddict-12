@@ -1,4 +1,4 @@
-import {generateRandomInfo, generateDate} from "../utils/common-mock.js";
+import {generateRandomInfo, generateDate, generateId} from "../utils/common-mock.js";
 
 const messages = [
   `Interesting setting and a good cast`,
@@ -25,6 +25,7 @@ const autors = [
 
 export const generateComment = () => {
   return {
+    id: generateId(),
     author: generateRandomInfo(autors),
     message: generateRandomInfo(messages),
     emoji: generateRandomInfo(emojis),

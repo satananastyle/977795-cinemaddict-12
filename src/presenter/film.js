@@ -1,6 +1,7 @@
 import FilmCard from "../view/film-card.js";
 import FilmDetails from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -102,6 +103,8 @@ export default class Film {
 
   _handlerWatchlistClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -114,6 +117,8 @@ export default class Film {
 
   _handlerWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -126,6 +131,8 @@ export default class Film {
 
   _handlerFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
         Object.assign(
             {},
             this._film,

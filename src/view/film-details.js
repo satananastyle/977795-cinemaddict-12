@@ -105,11 +105,7 @@ const renderFilmCardControls = (isWatchlist, isWatched, isFavorite) => {
 };
 
 const createFilmDetailsTemplate = (data) => {
-<<<<<<< HEAD
-  const {title, poster, description, release, rating, genres, runtime, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
-=======
-  const {title, poster, comments, description, release, rating, genres, duration, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
->>>>>>> master
+  const {title, poster, description, release, rating, genres, duration, country, director, writers, actors, age, isWatchlist, isWatched, isFavorite, reactions, localComment} = data;
 
   return (
     `<section class="film-details">
@@ -200,6 +196,7 @@ export default class FilmDetails extends Smart {
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    // this._commentDeleteClickHandler = this._commentDeleteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -262,11 +259,28 @@ export default class FilmDetails extends Smart {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiClickHandler);
   }
 
+  // _commentDeleteClickHandler(evt) {
+  //   evt.preventDefault();
+  //   this._callback.deleteClick();
+  //   this.updateData(
+  //     {
+  //       localComment: {
+  //         emotion: evt.target.value
+  //       }
+  //     }, false);
+  // }
+
+  // setDeleteClickHandler(callback) {
+  //   this._callback.deleteClick = callback;
+  //   this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._commentDeleteClickHandler);
+  // }
+
   restoreHandlers() {
     this.setEmojiClickHandler(this._callback.emojiClick);
     this.setClickHandler(this._callback.click);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
+    // this.setDeleteClickHandler(this._callback.deleteClick);
   }
 }

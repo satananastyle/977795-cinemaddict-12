@@ -1,38 +1,27 @@
 import Header from "./view/header.js";
-import Filter from "./view/navigation.js";
 import {generateFilmCard} from "./mock/film-card.js";
-import {generateFilter} from "./mock/filters.js";
-import {render, RenderPosition} from "./utils/render.js";
 import FilmsPresenter from "./presenter/films.js";
+import FilterPresenter from "./presenter/filters.js";
 import FilmsModel from "./model/films.js";
+import FilterModel from "./model/filters.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const COUNT_ALL_FILMS = 22;
-// const COUNT_TOP_FILMS = 2;
 
-const filmCards = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
-const filters = generateFilter(filmCards);
+const films = new Array(COUNT_ALL_FILMS).fill().map(generateFilmCard);
 
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(filmCards);
+filmsModel.setFilms(films);
 
-const siteHeaderElement = document.querySelector(`.header`);
+const filterModel = new FilterModel();
+
 const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = document.querySelector(`.header`);
 
 render(siteHeaderElement, new Header(), RenderPosition.BEFOREEND);
-render(siteMainElement, new Filter(filters), RenderPosition.BEFOREEND);
 
-const filmsPresenter = new FilmsPresenter(siteMainElement, filmsModel);
-filmsPresenter.init(filmCards);
+const filmsPresenter = new FilmsPresenter(siteMainElement, filmsModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 
-// Здесь отрисовка топа и самых закомментировных фильмов. Убрала до работы над сортировкой
-// for (let i = 0; i < COUNT_TOP_FILMS; i++) {
-//   render(siteContent.getElement(), new FilmsExtra().getElement(), RenderPosition.BEFOREEND);
-// }
-
-// const siteFilmsExtraListElements = document.querySelectorAll(`.films-list--extra .films-list__container`);
-
-// siteFilmsExtraListElements.forEach((element) => {
-//   for (let i = 0; i < COUNT_TOP_FILMS; i++) {
-//     renderFilm(element, filmCards[i]);
-//   }
-// });
+filterPresenter.init();
+filmsPresenter.init();
