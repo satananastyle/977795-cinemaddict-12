@@ -1,4 +1,4 @@
-import {generateRandomInfo, generateDate} from "../utils/common-mock.js";
+import {generateRandomInfo, generateDate, generateId} from "../utils/common-mock.js";
 
 const messages = [
   `Interesting setting and a good cast`,
@@ -9,10 +9,10 @@ const messages = [
 ];
 
 const emojis = [
-  `angry.png`,
-  `puke.png`,
-  `sleeping.png`,
-  `smile.png`,
+  `angry`,
+  `puke`,
+  `sleeping`,
+  `smile`,
 ];
 
 const autors = [
@@ -25,16 +25,17 @@ const autors = [
 
 export const generateComment = () => {
   return {
+    id: generateId(),
     author: generateRandomInfo(autors),
     message: generateRandomInfo(messages),
-    emoji: generateRandomInfo(emojis),
+    emotion: generateRandomInfo(emojis) + `.png`,
     date: generateDate(new Date(2006, 0, 1), new Date()),
   };
 };
 
 export const generateLocalComment = () => {
   return {
-    comment: null,
+    message: ``,
     date: null,
     emotion: null,
   };

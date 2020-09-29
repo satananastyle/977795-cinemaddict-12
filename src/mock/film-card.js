@@ -107,16 +107,13 @@ const generateDescription = () => {
 
 const generateDuration = () => getRandomInteger(MIN_DURATION_MIN, MAX_DURATION_MIN);
 
-const comments = getRandomInteger(0, TASK_COUNT);
-
 export const generateFilmCard = () => {
   return {
     id: generateId(),
     title: generateRandomInfo(titles),
     poster: generateRandomInfo(posters),
     description: generateDescription(),
-    comments,
-    reactions: new Array(comments).fill().map(generateComment),
+    reactions: new Array(getRandomInteger(0, TASK_COUNT)).fill().map(generateComment),
     localComment: generateLocalComment(),
     rating: getRandom(0, 10),
     release: generateDate(new Date(FIRST_FILM, 0, 1), new Date()),

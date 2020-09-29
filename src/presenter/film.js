@@ -1,6 +1,7 @@
 import FilmCard from "../view/film-card.js";
 import FilmDetails from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -13,6 +14,7 @@ export default class Film {
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._mode = Mode.DEFAULT;
+    this._controlFlag = false;
 
     this._filmCard = null;
     this._filmDetails = null;
@@ -25,7 +27,13 @@ export default class Film {
     this._handlerWatchedClick = this._handlerWatchedClick.bind(this);
     this._handlerFavoriteClick = this._handlerFavoriteClick.bind(this);
 
+    this._handlerWatchlistDetailsClick = this._handlerWatchlistDetailsClick.bind(this);
+    this._handlerWatchedDetailsClick = this._handlerWatchedDetailsClick.bind(this);
+    this._handlerFavoriteDetailsClick = this._handlerFavoriteDetailsClick.bind(this);
+
     this._handlerEmojiClick = this._handlerEmojiClick.bind(this);
+    this._handlerAddComment = this._handlerAddComment.bind(this);
+    this._handlerRemoveComment = this._handlerRemoveComment.bind(this);
   }
 
   init(film) {
@@ -44,10 +52,13 @@ export default class Film {
     this._filmCard.setFavoriteClickHandler(this._handlerFavoriteClick);
 
     this._filmDetails.setClickHandler(this._handlerCloseDetails);
-    this._filmDetails.setWatchlistClickHandler(this._handlerWatchlistClick);
-    this._filmDetails.setWatchedClickHandler(this._handlerWatchedClick);
-    this._filmDetails.setFavoriteClickHandler(this._handlerFavoriteClick);
+    this._filmDetails.setWatchlistClickHandler(this._handlerWatchlistDetailsClick);
+    this._filmDetails.setWatchedClickHandler(this._handlerWatchedDetailsClick);
+    this._filmDetails.setFavoriteClickHandler(this._handlerFavoriteDetailsClick);
     this._filmDetails.setEmojiClickHandler(this._handlerEmojiClick);
+
+    this._filmDetails.setAddCommentHandler(this._handlerAddComment);
+    this._filmDetails.setRemoveCommentHandler(this._handlerRemoveComment);
 
 
     if (prevFilmCard === null || prevFilmDetails === null) {
@@ -91,6 +102,25 @@ export default class Film {
     remove(this._filmDetails);
     this._mode = Mode.DEFAULT;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+
+    if (this._controlFlag) {
+      this._changeData(
+          UserAction.UPDATE_FILM,
+          UpdateType.MINOR,
+          Object.assign(
+              {},
+              this._film,
+              {
+                localComment: {
+                  emotion: null,
+                  message: ``,
+                }
+              }
+          )
+      );
+    }
+
+    this._controlFlag = false;
   }
 
   _escKeyDownHandler(evt) {
@@ -102,6 +132,8 @@ export default class Film {
 
   _handlerWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -112,8 +144,26 @@ export default class Film {
     );
   }
 
+  _handlerWatchlistDetailsClick() {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._film,
+            {
+              isWatchlist: !this._film.isWatchlist
+            }
+        )
+    );
+
+    this._controlFlag = true;
+  }
+
   _handlerWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -124,8 +174,26 @@ export default class Film {
     );
   }
 
+  _handlerWatchedDetailsClick() {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._film,
+            {
+              isWatched: !this._film.isWatched
+            }
+        )
+    );
+
+    this._controlFlag = true;
+  }
+
   _handlerFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -136,6 +204,66 @@ export default class Film {
     );
   }
 
+  _handlerFavoriteDetailsClick() {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._film,
+            {
+              isFavorite: !this._film.isFavorite
+            }
+        )
+    );
+
+    this._controlFlag = true;
+  }
+
   _handlerEmojiClick() {
+    this._controlFlag = true;
+  }
+
+  _handlerAddComment(newComment) {
+    if (!newComment.emotion) {
+      return;
+    }
+
+    const updatedCommentsArray = Object.assign({}, this._film).reactions;
+    updatedCommentsArray.push(newComment);
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._film,
+            {
+              reactions: updatedCommentsArray
+            }
+        )
+    );
+
+    this._controlFlag = true;
+  }
+
+  _handlerRemoveComment(element) {
+    const commentId = element.dataset.commentId;
+    const comments = this._film.reactions.slice();
+    comments.splice(comments.findIndex((comment) => String(comment.id) === commentId), 1);
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        Object.assign(
+            {},
+            this._film,
+            {
+              reactions: comments,
+            }
+        )
+    );
+
+    this._controlFlag = true;
   }
 }
